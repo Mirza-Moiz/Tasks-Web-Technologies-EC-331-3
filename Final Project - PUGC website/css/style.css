@@ -2741,6 +2741,10 @@ h3 {
   background-image: url(../img/banner/contact.jpg);
 }
 
+.breadcam_bg_events {
+  background-image: url(../img/banner/events.jpg);
+}
+
 /* line 5, ../../Arafath/CL/january 2020/243.Education/HTML/scss/_bradcam.scss */
 .bradcam_area {
   padding: 170px;
