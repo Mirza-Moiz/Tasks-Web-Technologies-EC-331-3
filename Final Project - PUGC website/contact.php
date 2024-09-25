@@ -1,3 +1,48 @@
+<?php
+require './connectdb.php';
+
+$loadingMessage = '';
+$errorMessage = '';
+$successMessage = '';
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Prepare and bind
+    $stmt = $conn->prepare("INSERT INTO contacts (name, email, subject, message) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $name, $email, $subject, $message);
+
+    // Get the form data
+    $name = htmlspecialchars(trim($_POST['name']));
+    $email = htmlspecialchars(trim($_POST['email']));
+    $subject = htmlspecialchars(trim($_POST['subject']));
+    $message = htmlspecialchars(trim($_POST['message']));
+
+    // Validate the input (basic validation)
+    if (empty($name) || empty($email) || empty($subject) || empty($message)) {
+        $errorMessage = "All fields are required.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errorMessage = "Invalid email format.";
+    } else {
+        // Execute the statement
+        if ($stmt->execute()) {
+            $successMessage = "Message sent successfully!";
+            // Clear the form fields
+            $name = $email = $subject = $message = '';
+        } else {
+            $errorMessage = "Error: " . $stmt->error;
+        }
+    }
+
+    // Close the statement
+    $stmt->close();
+}
+
+// Close the connection
+$conn->close();
+?>
+
+
+
 <!doctype html>
 <html class="no-js" lang="zxx">
 
@@ -88,7 +133,7 @@
                                                     <ul class="submenu">
                                                         <li><a href="academics/departments.html">Departments</a></li>
                                                         <li><a href="academics/programs.html">Programs</a></li>
-                                                        <li><a href="academics/faculty.html">Faculty</a></li>
+                                                        <li><a href="academics/faculty.php">Faculty</a></li>
                                                     </ul>
                                                 </li>
                                                 <li class="dropdown">
@@ -152,42 +197,88 @@
                     <h2 class="contact-title">Get in Touch</h2>
                 </div>
                 <div class="col-lg-8">
-                    <form class="form-contact contact_form" action="contact_process.php" method="post" id="contactForm"
-                        novalidate="novalidate">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <textarea class="form-control w-100" name="message" id="message" cols="30" rows="9"
-                                        onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Message'"
-                                        placeholder="Message"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input class="form-control valid" name="name" id="name" type="text"
-                                        onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'"
-                                        placeholder="Enter your name">
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input class="form-control valid" name="email" id="email" type="email"
-                                        onfocus="this.placeholder = ''"
-                                        onblur="this.placeholder = 'Enter email address'" placeholder="Email">
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <input class="form-control" name="subject" id="subject" type="text"
-                                        onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Subject'"
-                                        placeholder="Enter Subject">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group mt-3">
-                            <button type="submit" class="button button-contactForm boxed-btn">Send</button>
-                        </div>
-                    </form>
+                 <form
+  action="contact.php"
+  method="post"
+  class="form-contact contact_form"
+  data-aos="fade-up"
+  data-aos-delay="200"
+  id="contactForm"
+  novalidate="novalidate">
+  
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="form-group">
+        <input
+          type="text"
+          name="name"
+          class="form-control valid"
+          placeholder="Enter your name"
+          value="<?php echo isset($_POST['name']) ? $_POST['name'] : ''; ?>"
+          required="">
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="form-group">
+        <input
+          type="email"
+          class="form-control valid"
+          name="email"
+          placeholder="Email"
+          value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>"
+          required="">
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          name="subject"
+          placeholder="Enter Subject"
+          value="<?php echo isset($_POST['subject']) ? $_POST['subject'] : ''; ?>"
+          required="">
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-group">
+        <textarea
+          class="form-control w-100"
+          name="message"
+          cols="30"
+          rows="9"
+          placeholder="Message"
+          required=""><?php echo isset($_POST['message']) ? $_POST['message'] : ''; ?></textarea>
+      </div>
+    </div>
+
+    <div class="col-12 text-center">
+      <div class="form-group mt-3">
+        <button type="submit" class="button button-contactForm boxed-btn">Send</button>
+      </div>
+    </div>
+
+    <div class="col-12 text-center">
+      <div class="loading" style="display: <?php echo $loadingMessage ? 'block' : 'none'; ?>;">
+        <?php echo $loadingMessage; ?>
+      </div>
+      <div class="error-message" style="display: <?php echo $errorMessage ? 'block' : 'none'; ?>;">
+        <?php echo $errorMessage; ?>
+      </div>
+      <div class="sent-message" style="display: <?php echo $successMessage ? 'block' : 'none'; ?>;">
+        <?php echo $successMessage; ?>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+
+
+
                 </div>
                 <div class="col-lg-3 offset-lg-1">
                     <div class="media contact-info">

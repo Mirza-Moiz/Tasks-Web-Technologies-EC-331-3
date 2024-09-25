@@ -1,3 +1,5 @@
+<?php require '../connectdb.php'; ?>
+
 <!doctype html>
 <html class="no-js" lang="zxx">
 
@@ -91,7 +93,7 @@
                                                 <ul class="submenu">
                                                     <li><a href="./departments.html">Departments</a></li>
                                                     <li><a href="./programs.html">Programs</a></li>
-                                                    <li><a href="./faculty.html">Faculty</a></li>
+                                                    <li><a href="./faculty.php">Faculty</a></li>
                                                 </ul>
                                             </li>
 
@@ -110,7 +112,7 @@
                                             <li><a href="../notices.html">Notices</a></li>
                                             <li><a href="../downloads.html">Downloads</a></li>
                                             <li><a href="../about.html">About</a></li>
-                                            <li><a href="../contact.html">Contact</a></li>
+                                            <li><a href="../contact.php">Contact</a></li>
                                         </ul>
                                     </nav>
                                 </div>
@@ -127,50 +129,59 @@
 </header>
 
     <!-- Page Content -->
-    <div class="container py-5">
-        <h1 class="mb-4">Announcements</h1>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Announcement Title 1</h5>
-                        <p class="card-text">Details about the announcement. This could include information about upcoming events, important dates, or other relevant updates for students and faculty.</p>
-                        <p class="text-muted">Date: [Insert Date]</p>
-                    </div>
-                </div>
-            </div>
+ <div class="container py-5">
+    <h1 class="text-center">Faculty</h1>
+    <hr>
+<div class="row">
+    <?php
+        // Fetch all faculty members from the correct table
+        $sql = "SELECT * FROM faculty_members"; // corrected table name
+        $result = $conn->query($sql);
 
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Announcement Title 2</h5>
-                        <p class="card-text">Details about another announcement. Provide relevant information regarding this particular update, including its importance for the university community.</p>
-                        <p class="text-muted">Date: [Insert Date]</p>
-                    </div>
-                </div>
-            </div>
+        if ($result->num_rows > 0) {
+            // Loop through each faculty member and display their information
+            while ($row = $result->fetch_assoc()) {
+                // Get the initials
+                $nameParts = explode(" ", $row['name']);
+                $initials = strtoupper(substr($nameParts[0], 0, 1) . (isset($nameParts[1]) ? substr($nameParts[1], 0, 1) : ''));
 
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Announcement Title 3</h5>
-                        <p class="card-text">Details of the announcement can go here, with a focus on informing students or faculty about new initiatives, guidelines, or events.</p>
-                        <p class="text-muted">Date: [Insert Date]</p>
-                    </div>
-                </div>
-            </div>
+                echo '<div class="col-md-4">
+                        <div class="card mb-4 shadow-sm" style="position: relative;">
+                            <div class="image-container" style="width: 100%; height: auto; min-height: 500px; display: flex; justify-content: center; align-items: center; background-color: gray;">
+                ';
 
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Announcement Title 4</h5>
-                        <p class="card-text">Provide details for this specific announcement, emphasizing its relevance and why it's important for the university community.</p>
-                        <p class="text-muted">Date: [Insert Date]</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                // Check if the image path exists
+                if (!empty($row['image_path']) && file_exists($row['image_path'])) {
+                    echo '<img src="'.$row['image_path'].'" class="card-img-top" alt="'.$row['name'].'" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">';
+                } else {
+                    // Display initials if image is not available
+                    echo '<div style="width: 150px; height: 150px; border-radius: 50%; background-color: #232637; color: white; display: flex; justify-content: center; align-items: center; font-size: 72px; font-weight: semi-bold; position: absolute;">'.$initials.'</div>';
+                }
+
+                echo '      </div>
+                            <div class="card-body">
+                                <h5 class="card-title">'.$row['name'].'</h5>
+                                <p class="card-text">'.$row['position'].'</p>
+                                <p class="card-text">'.$row['department'].'</p>
+                                <p class="card-text">'.$row['email'].'</p>
+                                <p class="card-text">'.$row['phone'].'</p>
+                            </div>
+                        </div>
+                      </div>';
+            }
+        } else {
+            // In case there are no faculty members in the database
+            echo '<p>No faculty members found.</p>';
+        }
+    ?>
+</div>
+
+
+
+
+</div>
+
+
 
     <footer class="footer">
     <div class="footer_top">
@@ -256,7 +267,7 @@
                             Support
                         </h3>
                         <ul>
-                            <li><a href="../contact.html">Contact Us</a></li>
+                            <li><a href="../contact.php">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
