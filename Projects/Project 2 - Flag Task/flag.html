@@ -1,69 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <title>CSS Flag Project</title>
-  <style>
-    /* Write your CSS Code here */
-
-      *{
+  <head>
+    <meta charset="UTF-8" />
+    <title>CSS Flag Project</title>
+    <style>
+      /* Write your CSS Code here */
+      
+{
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
+      box-sizing: border-box;}
     body {
       display: flex;
       align-items: center;
       justify-content: center;
       background-color: black;
-      height: 100vh;
-    }
-
-    .flag {
-      border: 5px solid white;
-    }
-
+      height: 100vh;}.flag {
+      border: 5px solid white;}
     div {
       background-color: red;
       width: 900px;
       height: 600px;
-      position: relative;
-    }
-
+      position: relative;}
     div p {
       text-align: center;
       color: white;
-      font-size: 80px;
-    }
-
-    div>div {
+      font-size: 80px;}
+    div > div {
       position: absolute;
       background-color: blue;
       width: 100%;
       height: 50%;
       display: flex;
       align-items: center;
-      justify-content: center;
-    }
-
-    div>div>div {
+      justify-content: center;}
+    div > div > div {
       background-color: white;
       width: 200px;
       height: 200px;
       border-radius: 300px;
-      position: relative;
-    }
-
-    div>div>div p {
+      position: relative;}
+    div > div > div p {
       font-size: 80px;
-      color: black;
-    }
-  </style>
-</head>
+      color: black;}</style></head>
 
-<!-- 
+  <!-- 
   IMPORTANT! Do not change any HTML
 Don't add any classes/ids/elements 
 Use what you know about combining selectors 
@@ -71,15 +52,14 @@ and CSS specificity instead.
 Hint 1: The flag is 900px by 600px and the circle is 200px by 200px.
 -->
 
-<body>
-  <div class="flag">
-    <p>The Flag</p>
-    <div>
+  <body>
+    <div class="flag">
+      <p>The Flag</p>
       <div>
-        <p>of Laos</p>
+        <div>
+          <p>of Laos</p>
+        </div>
       </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>
